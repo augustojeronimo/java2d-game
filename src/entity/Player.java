@@ -14,10 +14,16 @@ public class Player extends Entity
     private GamePanel gp;
     private KeyHandler keyH;
 
+    public final int screenX;
+    public final int screenY;
+
     public Player(GamePanel gp, KeyHandler keyH)
     {
         this.gp = gp;
         this.keyH = keyH;
+
+        this.screenX = gp.SCREEN_WIDTH/2 - gp.SPRITE_SIZE/2;
+        this.screenY = gp.SCREEN_HEIGHT/2 - gp.SPRITE_SIZE/2;
 
         this.setDefaultValues();
         this.loadImages();
@@ -25,9 +31,9 @@ public class Player extends Entity
 
     public void setDefaultValues()
     {
-        x = gp.SCREEN_WIDTH/2;
-        y = gp.SCREEN_HEIGHT/2;
-        speed = gp.SCALE;
+        worldX = gp.WORLD_WIDTH/2 - gp.SPRITE_SIZE/2;
+        worldY = gp.WORLD_HEIGHT/2 - gp.SPRITE_SIZE/2;
+        speed = gp.SCALE * 60 / gp.FPS; // Constant speed
         direction = "stopped";
     }
 
@@ -53,19 +59,19 @@ public class Player extends Entity
     {
         if (keyH.upPressed) {
             direction = "up";
-            y -= speed;
+            worldY -= speed;
         }
         else if (keyH.downPressed) {
             direction = "down";
-            y += speed;
+            worldY += speed;
         }
         else if (keyH.leftPressed) {
             direction = "left";
-            x -= speed;
+            worldX -= speed;
         }
         else if (keyH.rightPressed) {
             direction = "right";
-            x += speed;
+            worldX += speed;
         } else {
             direction = "stopped";
         }
@@ -95,7 +101,7 @@ public class Player extends Entity
         
         countFrame();
 
-        g.drawImage(image, x, y, gp.SPRITE_SIZE, gp.SPRITE_SIZE, null);
+        g.drawImage(image, screenX, screenY, gp.SPRITE_SIZE, gp.SPRITE_SIZE, null);
         g.dispose();
     }
 }

@@ -19,18 +19,19 @@ public class TileManager
         this.gp = gp;
 
         loadTileTypes();
-        loadMap("/resources/maps/001.map");
+        loadMap("/resources/maps/002.map");
     }
 
     public void loadTileTypes()
     {
-        String[] tileTypes = {
-            "grass",
-            "water",
-            "tree",
-            "wall",
-            "earth",
-            "sand",
+        String[][] tileTypes = {
+            // name, colision
+            {"grass", "off"},
+            {"water", "on"},
+            {"tree", "on"},
+            {"wall", "on"},
+            {"earth", "off"},
+            {"sand", "off"},
         };
 
         this.tile = new Tile[tileTypes.length];
@@ -38,7 +39,8 @@ public class TileManager
         try {
             for (int i = 0; i < tileTypes.length; i++) {
                 tile[i] = new Tile();
-                tile[i].image = ImageIO.read(getClass().getResourceAsStream("/resources/images/tiles/"+tileTypes[i]+".png"));
+                tile[i].image = ImageIO.read(getClass().getResourceAsStream("/resources/images/tiles/"+tileTypes[i][0]+".png"));
+                tile[i].colision = tileTypes[i][1].equals("on");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,15 +49,15 @@ public class TileManager
 
     public void loadMap(String mapPath)
     {
-        map = new int[gp.MAX_SCREEN_ROW][gp.MAX_SCREEN_COL];
+        map = new int[gp.MAX_WORLD_ROW][gp.MAX_WORLD_COL];
         try {
             InputStream is = getClass().getResourceAsStream(mapPath);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-            for (int row = 0; row < gp.MAX_SCREEN_ROW; row++) {
+            for (int row = 0; row < gp.MAX_WORLD_ROW; row++) {
                 String[] mapRow = reader.readLine().split(" ");
 
-                for (int col = 0; col < gp.MAX_SCREEN_COL; col++) {
+                for (int col = 0; col < gp.MAX_WORLD_COL; col++) {
                     map[row][col] = Integer.parseInt(mapRow[col]);
                 }
             }
@@ -66,19 +68,23 @@ public class TileManager
 
     public void draw(Graphics2D g)
     {
-        int col = 0, row = 0, x =0, y = 0;
+        for (int wRow = 0; wRow < gp.MAX_WORLD_ROW; wRow++) {
+            for (int wCol = 0; wCol < gp.MAX_WORLD_COL; wCol++) {
+                int type = map[wRow][wCol];
 
-        while (col < gp.MAX_SCREEN_COL && row < gp.MAX_SCREEN_ROW) {
-            int type = map[row][col];
-            g.drawImage(tile[type].image, x, y, gp.SPRITE_SIZE, gp.SPRITE_SIZE, null);
-            col++;
-            x += gp.SPRITE_SIZE;
+                int worldX = wCol * gp.SPRITE_SIZE;
+                int worldY = wRow * gp.SPRITE_SIZE;
+                int screenX = worldX - gp.player.worldX + gp.player.screenX;
+                int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
-            if (col == gp.MAX_SCREEN_COL) {
-                col = 0;
-                row++;
-                x = 0;
-                y += gp.SPRITE_SIZE;
+                if (
+                    worldX + gp.SPRITE_SIZE > gp.player.worldX - gp.player.screenX &&
+                    worldX - gp.SPRITE_SIZE < gp.player.worldX + gp.player.screenX &&
+                    worldY + gp.SPRITE_SIZE > gp.player.worldY - gp.player.screenY &&
+                    worldY - gp.SPRITE_SIZE < gp.player.worldY + gp.player.screenY
+                ) {
+                    g.drawImage(tile[type].image, screenX, screenY, gp.SPRITE_SIZE, gp.SPRITE_SIZE, null);
+                }
             }
         }
     }

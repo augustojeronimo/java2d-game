@@ -11,26 +11,33 @@ import java.awt.Graphics2D;
 public class GamePanel extends JPanel implements Runnable
 {
     // Game Constants 
+    public final int FPS = 60;
+    
     public final int ORIGINAL_SPRITE_SIZE = 16;
-    public final int SCALE = 5;
+    public final int SCALE = 4;
 
     public final int SPRITE_SIZE = ORIGINAL_SPRITE_SIZE * SCALE;
 
-    public final int MAX_SCREEN_COL = 16;
-    public final int MAX_SCREEN_ROW = 12;
+    public final int MAX_SCREEN_COL = 20;
+    public final int MAX_SCREEN_ROW = 15;
 
     public final int SCREEN_WIDTH = MAX_SCREEN_COL * SPRITE_SIZE;
     public final int SCREEN_HEIGHT = MAX_SCREEN_ROW * SPRITE_SIZE;
 
-    final int FPS = 60;
 
     // Game Composion
     private TileManager tileManager;
     private KeyHandler keyHandler;
     private Thread gameThread;
 
+    // World Settings
+    public final int MAX_WORLD_COL = 50;
+    public final int MAX_WORLD_ROW = 50;
+    public final int WORLD_WIDTH = MAX_WORLD_COL * SPRITE_SIZE;
+    public final int WORLD_HEIGHT = MAX_WORLD_ROW * SPRITE_SIZE;
+
     // Game Entities
-    private Player player;
+    public Player player;
 
     public GamePanel()
     {
