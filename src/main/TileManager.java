@@ -10,9 +10,9 @@ import javax.imageio.ImageIO;
 
 public class TileManager
 {
-    private GamePanel gp;
-    private Tile[] tile;
-    private int[][] map;
+    GamePanel gp;
+    public Tile[] tile;
+    public int[][] map;
 
     public TileManager(GamePanel gp)
     {
@@ -26,12 +26,12 @@ public class TileManager
     {
         String[][] tileTypes = {
             // name, colision
-            {"grass", "off"},
-            {"water", "on"},
-            {"tree", "on"},
-            {"wall", "on"},
-            {"earth", "off"},
-            {"sand", "off"},
+            {"grass", "off"}, // 0
+            {"water", "on"}, // 1
+            {"tree", "on"}, // 2
+            {"wall", "on"}, // 3
+            {"earth", "off"}, // 4
+            {"sand", "off"}, // 5
         };
 
         this.tile = new Tile[tileTypes.length];

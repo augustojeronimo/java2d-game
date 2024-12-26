@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -33,8 +34,15 @@ public class Player extends Entity
     {
         worldX = gp.WORLD_WIDTH/2 - gp.SPRITE_SIZE/2;
         worldY = gp.WORLD_HEIGHT/2 - gp.SPRITE_SIZE/2;
+
         speed = gp.SCALE * 60 / gp.FPS; // Constant speed
         direction = "stopped";
+
+        solidArea = new Rectangle();
+        solidArea.width = gp.SPRITE_SIZE * 2 / 3;
+        solidArea.height = gp.SPRITE_SIZE * 2 / 3;
+        solidArea.y = gp.SPRITE_SIZE * 1 / 3;
+        solidArea.x = gp.SPRITE_SIZE * 1 / 6;
     }
 
     private void loadImages()
@@ -59,21 +67,39 @@ public class Player extends Entity
     {
         if (keyH.upPressed) {
             direction = "up";
-            worldY -= speed;
         }
         else if (keyH.downPressed) {
             direction = "down";
-            worldY += speed;
         }
         else if (keyH.leftPressed) {
             direction = "left";
-            worldX -= speed;
         }
         else if (keyH.rightPressed) {
             direction = "right";
-            worldX += speed;
         } else {
             direction = "stopped";
+        }
+        
+        colisionOn = false;
+        gp.colisionChecker.checkTile(this);
+
+        if (!colisionOn) {
+            switch (direction) {
+                case "up":
+                    worldY -= speed;
+                    break;
+                case "down":
+                    worldY += speed;
+                    break;
+                case "left":
+                    worldX -= speed;
+                    break;
+                case "right":
+                    worldX += speed;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

@@ -26,9 +26,10 @@ public class GamePanel extends JPanel implements Runnable
 
 
     // Game Composion
-    private TileManager tileManager;
+    public TileManager tileManager;
     private KeyHandler keyHandler;
     private Thread gameThread;
+    public CollisionChecker colisionChecker;
 
     // World Settings
     public final int MAX_WORLD_COL = 50;
@@ -50,8 +51,8 @@ public class GamePanel extends JPanel implements Runnable
         this.addKeyListener(keyHandler);
 
         player = new Player(this, keyHandler);
-        
         tileManager = new TileManager(this);
+        colisionChecker = new CollisionChecker(this);
     }
 
     public void startGameThread()
